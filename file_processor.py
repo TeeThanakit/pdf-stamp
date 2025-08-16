@@ -115,16 +115,43 @@ def process_pdf_document(pdf_path, product_data, output_folder, work_area_rect, 
 
                 current_y += 4
                 for name, qty in product_list:
-                    name_rect = fitz.Rect(work_area_rect.x0, current_y, qty_start_x - 5, current_y + 50)
-                    qty_rect = fitz.Rect(qty_start_x, current_y, work_area_rect.x1, current_y + 50)
-                    
-                    text_height = new_page.insert_textbox(name_rect, name, fontname=PDF_FONT_NAME, fontsize=font_size, fontfile=THAI_FONT_FILE)
-                    new_page.insert_textbox(qty_rect, str(qty), fontname=PDF_FONT_NAME, fontsize=font_size, fontfile=THAI_FONT_FILE)
-                    
-                    if text_height < (font_size + 1):
-                        current_y += line_height
-                    else:
-                        current_y += (text_height + 4)
+                    # เพิ่ม padding ด้านบนและล่าง
+                    cell_padding = 6
+                    # คำนวณ rect ให้สูงขึ้นตามข้อความจริง
+                    name_rect = fitz.Rect(
+                        work_area_rect.x0,
+                        current_y + cell_padding,
+                        qty_start_x - 5,
+                        current_y + 50 - cell_padding
+                    )
+                    qty_rect = fitz.Rect(
+                        qty_start_x,
+                        current_y + cell_padding,
+                        work_area_rect.x1,
+                        current_y + 50 - cell_padding
+                    )
+
+                    # วาดชื่อสินค้าและคืนค่าความสูงของข้อความจริง (รองรับข้อความยาวขึ้นบรรทัดใหม่)
+                    name_text_height = new_page.insert_textbox(
+                        name_rect,
+                        name,
+                        fontname=PDF_FONT_NAME,
+                        fontsize=font_size,
+                        fontfile=THAI_FONT_FILE,
+                        align=0  # left
+                    )
+                    # วาดจำนวนสินค้า (จัดซ้าย)
+                    new_page.insert_textbox(
+                        qty_rect,
+                        str(qty),
+                        fontname=PDF_FONT_NAME,
+                        fontsize=font_size,
+                        fontfile=THAI_FONT_FILE,
+                        align=0  # left
+                    )
+
+                    # ขยับ current_y ตามความสูงจริงของข้อความ name (รองรับขึ้นบรรทัดใหม่)
+                    current_y += max(name_text_height, line_height) + cell_padding * 2 + 4
 
             else:
                 statuses.append(f"คำเตือน: ไม่พบข้อมูลสินค้าสำหรับหมายเลข {order_no}")
