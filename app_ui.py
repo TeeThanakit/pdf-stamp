@@ -79,7 +79,7 @@ class App(customtkinter.CTk):
             "default_area": None
         }
         
-        self.font_size = 10
+        self.font_size = 11
         self.whiteout_var = tkinter.BooleanVar()
         
         self.selection_frame = customtkinter.CTkFrame(self)

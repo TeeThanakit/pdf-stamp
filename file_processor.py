@@ -96,7 +96,7 @@ def process_pdf_document(pdf_path, product_data, output_folder, work_area_rect, 
                 # --- UPDATED: ปรับความสูงบรรทัดให้แคบลง ---
                 line_height = font_size + 2 
                 
-                start_point = work_area_rect.tl if place_at_top else work_area_rect.bl
+                start_point = work_area_rect.tl
                 current_y = start_point.y
                 
                 new_page.insert_font(fontfile=THAI_FONT_FILE, fontname=PDF_FONT_NAME)
