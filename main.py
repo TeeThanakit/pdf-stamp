@@ -1,3 +1,5 @@
+# main.py
+
 import customtkinter
 from tkinter import messagebox
 import os
@@ -11,8 +13,10 @@ if __name__ == "__main__":
     customtkinter.set_appearance_mode("System")
     customtkinter.set_default_color_theme("blue")
 
-    if not os.path.exists(THAI_FONT_FILE):
-        messagebox.showerror("ข้อผิดพลาดเกี่ยวกับฟอนต์", f"ไม่พบไฟล์ฟอนต์ '{THAI_FONT_FILE}'\nกรุณาวางไฟล์ในโฟลเดอร์เดียวกับโปรแกรม")
-    else:
-        app = App()
-        app.mainloop()
+    font_path_to_check = resource_path(os.path.basename(THAI_FONT_FILE))
+    
+    if not os.path.exists(font_path_to_check):
+        messagebox.showwarning("Font Warning", f"ไม่พบไฟล์ฟอนต์ '{os.path.basename(THAI_FONT_FILE)}'\n(โปรแกรมจะรวมไฟล์นี้เข้าไปตอนสร้าง .exe)")
+    
+    app = App()
+    app.mainloop()
